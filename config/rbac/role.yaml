@@ -145,27 +145,20 @@ rules:
   resources:
   - storageclusters
   verbs:
-  - delete
   - get
   - list
-  - patch
-  - update
   - watch
 - apiGroups:
   - odf.ibm.com
   resources:
   - flashsystemclusters
   verbs:
-  - delete
   - get
   - list
-  - patch
-  - update
   - watch
 - apiGroups:
   - odf.openshift.io
   resources:
-  - storagesystems
   - tlsprofiles
   verbs:
   - create
@@ -178,7 +171,6 @@ rules:
 - apiGroups:
   - odf.openshift.io
   resources:
-  - storagesystems/finalizers
   - tlsprofiles/finalizers
   verbs:
   - update

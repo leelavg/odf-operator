@@ -1,0 +1,27 @@
+# permissions for end users to view tlsprofiles.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: tlsprofile-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: odf-operator
+    app.kubernetes.io/part-of: odf-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: tlsprofile-viewer-role
+rules:
+- apiGroups:
+  - odf.openshift.io
+  resources:
+  - tlsprofiles
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - odf.openshift.io
+  resources:
+  - tlsprofiles/status
+  verbs:
+  - get

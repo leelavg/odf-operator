@@ -45,6 +45,7 @@ import (
 	metrics "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 
+	odfv1 "github.com/red-hat-storage/odf-operator/api/v1"
 	odfv1a1 "github.com/red-hat-storage/odf-operator/api/v1alpha1"
 	"github.com/red-hat-storage/odf-operator/controllers"
 	"github.com/red-hat-storage/odf-operator/pkg/util"
@@ -67,6 +68,7 @@ func init() {
 	utilruntime.Must(admrv1.AddToScheme(scheme))
 	utilruntime.Must(extv1.AddToScheme(scheme))
 	utilruntime.Must(configv1.AddToScheme(scheme))
+	utilruntime.Must(odfv1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -160,6 +162,13 @@ func main() {
 		OperatorNamespace: operatorNamespace,
 	}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "ClusterServiceVersion")
+		os.Exit(1)
+	}
+	if err = (&controllers.TLSProfileReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "TLSProfile")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

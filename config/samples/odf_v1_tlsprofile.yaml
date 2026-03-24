@@ -1,0 +1,12 @@
+apiVersion: odf.openshift.io/v1
+kind: TLSProfile
+metadata:
+  labels:
+    app.kubernetes.io/name: tlsprofile
+    app.kubernetes.io/instance: tlsprofile-sample
+    app.kubernetes.io/part-of: odf-operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: odf-operator
+  name: tlsprofile-sample
+spec:
+  # TODO(user): Add fields here

@@ -4,29 +4,20 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.1
-  name: storagesystems.odf.openshift.io
+  name: tlsprofiles.odf.openshift.io
 spec:
   group: odf.openshift.io
   names:
-    kind: StorageSystem
-    listKind: StorageSystemList
-    plural: storagesystems
-    shortNames:
-    - storsys
-    singular: storagesystem
+    kind: TLSProfile
+    listKind: TLSProfileList
+    plural: tlsprofiles
+    singular: tlsprofile
   scope: Namespaced
   versions:
-  - additionalPrinterColumns:
-    - jsonPath: .spec.kind
-      name: storage-system-kind
-      type: string
-    - jsonPath: .spec.name
-      name: storage-system-name
-      type: string
-    name: v1alpha1
+  - name: v1
     schema:
       openAPIV3Schema:
-        description: StorageSystem is the Schema for the storagesystems API
+        description: TLSProfile is the Schema for the tlsprofiles API
         properties:
           apiVersion:
             description: |-
@@ -46,28 +37,10 @@ spec:
           metadata:
             type: object
           spec:
-            description: StorageSystemSpec defines the desired state of StorageSystem
-            properties:
-              kind:
-                default: storagecluster.ocs.openshift.io/v1
-                description: Kind describes the kind of storage vendor
-                enum:
-                - flashsystemcluster.odf.ibm.com/v1alpha1
-                - storagecluster.ocs.openshift.io/v1
-                type: string
-              name:
-                description: Name describes the name of managed storage vendor CR
-                type: string
-              namespace:
-                description: Namespace describes the namespace of managed storage
-                  vendor CR
-                type: string
-            required:
-            - name
-            - namespace
+            description: TLSProfileSpec defines the desired state of TLSProfile
             type: object
           status:
-            description: StorageSystemStatus defines the observed state of StorageSystem
+            description: TLSProfileStatus defines the observed state of TLSProfile
             type: object
         type: object
     served: true

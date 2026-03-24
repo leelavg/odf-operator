@@ -166,6 +166,7 @@ rules:
   - odf.openshift.io
   resources:
   - storagesystems
+  - tlsprofiles
   verbs:
   - create
   - delete
@@ -178,7 +179,16 @@ rules:
   - odf.openshift.io
   resources:
   - storagesystems/finalizers
+  - tlsprofiles/finalizers
   verbs:
+  - update
+- apiGroups:
+  - odf.openshift.io
+  resources:
+  - tlsprofiles/status
+  verbs:
+  - get
+  - patch
   - update
 - apiGroups:
   - operators.coreos.com

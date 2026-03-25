@@ -26,3 +26,4 @@ testbin/*
 
 # catalog manifests
 catalog/odf.yaml
+api/tools/tls_config.json

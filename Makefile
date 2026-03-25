@@ -78,6 +78,18 @@ update-mgr-config: ## Feed env variables to the manager configmap
 	@echo "$$DEPLOYMENT_ENV_PATCH" > config/manager/deployment-env-patch.yaml
 	@echo "$$CONFIGMAP_YAML" > config/manager/configmap.yaml
 
+TLS_URL=https://ssl-config.mozilla.org/guidelines/5.7.json
+
+.PHONY: sync-tls
+sync-tls: ## Fetches Mozilla TLS JSON and generates golang mappings
+	@test -f api/tools/tls_config.json || curl -sSL $(TLS_URL) -o api/tools/tls_config.json
+	@cd api/tools/ && go run gen_tls.go && go fmt mappings_generated.go && go vet mappings_generated.go && mv mappings_generated.go ../v1/
+	@echo "Generated TLS mappings in api/v1/mappings_generated.go"
+
+.PHONY: clean-tls
+clean-tls: ## Cleans tls json and mappings
+	@rm -f api/v1/mappings_generated.go api/tools/tls_config.json
+
 # ------------------------------------------------------------------------------
 # This target prints additional FDF dependencies. This will be used in the DS build process.
 #

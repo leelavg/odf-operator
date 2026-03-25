@@ -1,6 +1,6 @@
 module github.com/red-hat-storage/odf-operator
 
-go 1.24.10
+go 1.26
 
 require (
 	github.com/blang/semver/v4 v4.0.0
@@ -12,13 +12,14 @@ require (
 	github.com/operator-framework/api v0.32.0
 	github.com/prometheus/client_golang v1.23.2
 	github.com/red-hat-storage/ocs-operator/api/v4 v4.0.0-20260114092656-7c4cbb4c3e69
+	github.com/red-hat-storage/odf-operator/api v0.0.0-00010101000000-000000000000
 	github.com/rook/rook/pkg/apis v0.0.0-20251119183400-8782e9183d04
 	github.com/stretchr/testify v1.11.1
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.1
 	k8s.io/api v0.34.2
 	k8s.io/apiextensions-apiserver v0.34.2
-	k8s.io/apimachinery v0.34.2
+	k8s.io/apimachinery v0.35.3
 	k8s.io/client-go v0.34.2
 	k8s.io/utils v0.0.0-20251002143259-bc988d571ff4
 	sigs.k8s.io/controller-runtime v0.22.4
@@ -152,7 +153,10 @@ require (
 	sigs.k8s.io/structured-merge-diff/v6 v6.3.0 // indirect
 )
 
-replace github.com/portworx/sched-ops => github.com/portworx/sched-ops v0.20.4-openstorage-rc3 // required by rook
+replace (
+	github.com/portworx/sched-ops => github.com/portworx/sched-ops v0.20.4-openstorage-rc3 // required by rook
+	github.com/red-hat-storage/odf-operator/api => ./api
+)
 
 exclude (
 	// This tag doesn't exist, but is imported by github.com/portworx/sched-ops.

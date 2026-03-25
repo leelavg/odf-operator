@@ -17,7 +17,10 @@ spec:
   - name: v1
     schema:
       openAPIV3Schema:
-        description: TLSProfile is the Schema for the tlsprofiles API
+        description: |-
+          TLSProfile is the Schema for the tlsprofiles API.
+          It allows administrators to configure TLS settings (protocol versions, ciphers, curves)
+          for ODF components in a centralized way.
         properties:
           apiVersion:
             description: |-
@@ -37,11 +40,113 @@ spec:
           metadata:
             type: object
           spec:
-            description: TLSProfileSpec defines the desired state of TLSProfile
+            description: Spec defines the desired TLS configuration rules.
+            properties:
+              rules:
+                description: |-
+                  Rules is a list of TLS configuration rules.
+                  Each rule specifies which components should use a particular TLS configuration.
+                  Overrides happend based on Selectors in each rule
+                items:
+                  description: TLSProfileRules defines a TLS configuration rule that
+                    applies to specific components.
+                  properties:
+                    config:
+                      description: Config is the TLS configuration to apply to the
+                        selected components.
+                      properties:
+                        ciphers:
+                          description: |-
+                            Ciphers is a list of IANA cipher suite names to enable.
+                            Example: ["TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"]
+                          items:
+                            type: string
+                          type: array
+                        groups:
+                          description: |-
+                            Groups is a list of elliptic curve group names to enable for key exchange.
+                            Use GroupToID and GroupToOpenSSL mappings to translate to Go/OpenSSL formats.
+                            Example: ["X25519", "prime256v1", "secp384r1"]
+                            Supports post-quantum hybrid groups like "X25519MLKEM768".
+                          items:
+                            type: string
+                          type: array
+                        minVersion:
+                          description: |-
+                            MinVersion specifies the minimum TLS protocol version to accept.
+                            Must be either "TLSv1.2" or "TLSv1.3".
+                          enum:
+                          - TLSv1.2
+                          - TLSv1.3
+                          type: string
+                      type: object
+                    selector:
+                      description: Selector identifies which components this rule
+                        applies to.
+                      items:
+                        description: TLSProfileSelector identifies which components
+                          should use a specific TLS configuration.
+                        type: string
+                      type: array
+                  type: object
+                type: array
             type: object
           status:
-            description: TLSProfileStatus defines the observed state of TLSProfile
+            description: Status shows the observed TLS configuration state across
+              components.
+            properties:
+              componenets:
+                description: |-
+                  Components is a list of components and their observed TLS configurations.
+                  Each entry shows what TLS settings a component is currently using.
+                items:
+                  description: TLSProfileComponents represents the observed TLS configuration
+                    for a specific component.
+                  properties:
+                    ObservedGeneration:
+                      description: |-
+                        ObservedGeneration is the generation of the TLSProfile that was last processed
+                        by this component. Used to track whether the component has applied the latest config.
+                      format: int64
+                      type: integer
+                    ciphers:
+                      description: |-
+                        Ciphers is a list of IANA cipher suite names to enable.
+                        Example: ["TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"]
+                      items:
+                        type: string
+                      type: array
+                    component:
+                      description: Component is the name of the component (e.g., "noobaa/s3",
+                        "ceph/rgw").
+                      type: string
+                    groups:
+                      description: |-
+                        Groups is a list of elliptic curve group names to enable for key exchange.
+                        Use GroupToID and GroupToOpenSSL mappings to translate to Go/OpenSSL formats.
+                        Example: ["X25519", "prime256v1", "secp384r1"]
+                        Supports post-quantum hybrid groups like "X25519MLKEM768".
+                      items:
+                        type: string
+                      type: array
+                    minVersion:
+                      description: |-
+                        MinVersion specifies the minimum TLS protocol version to accept.
+                        Must be either "TLSv1.2" or "TLSv1.3".
+                      enum:
+                      - TLSv1.2
+                      - TLSv1.3
+                      type: string
+                  required:
+                  - ObservedGeneration
+                  - component
+                  type: object
+                type: array
             type: object
+        required:
+        - metadata
+        - spec
+        - status
         type: object
     served: true
     storage: true
